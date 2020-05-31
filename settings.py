@@ -9,6 +9,8 @@ class Setting:
         "black":(0,0,0),
         "red":(0xff,0,0),
         "green":(0,0xff,0),
+        'yellow':(0xff,0xff,0),
+        'purple':(0xff,0,0xff),
         "blue":(0,0,0xff),
     }
 
@@ -19,6 +21,7 @@ class Setting:
         pygame.init()
         pygame.font.init()
         self.font = pygame.font.SysFont('arial', 12)
+        self.font2 = pygame.font.SysFont('arial', 20)
 
 
         self.screen = pygame.display.set_mode((self.screen_w, self.screen_h))
@@ -47,4 +50,5 @@ DAMAGING_RATE = 10 # days
 REPAIRING_RATE = 2 # days
 
 ENTRY_WIDTH_UI = 10
+FPS = 60
 

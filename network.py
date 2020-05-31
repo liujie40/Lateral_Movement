@@ -8,10 +8,21 @@ class Computer(GameObject):
     w = 5
     h = 5
 
-    def __init__(self, pos:pygame.Vector2, color):
+    def __init__(self, pos:pygame.Vector2, color=None):
+        if not color:
+            if self._state == State.VULNERABLE:
+                self.color = Setting.colors['red']
+            elif self._state == State.INTRUDED:
+                self.color = Setting.colors['green']
+            elif self._state == State.EXFILTRATED:
+                self.color = Setting.colors['purple']
+            elif self._state == State.SECURE:
+                self.color = Setting.colors['blue']
         super().__init__(pos, color)
 
         self._state = State.VULNERABLE
+
+
 
     def draw(self):
         pygame.draw.rect(self.screen, self.color,
@@ -68,10 +79,16 @@ class System:
             legend.update()
 
 
+
     def createLegend(self):
-        self.legend.append(Computer(pygame.Vector2(10,10), Setting.colors['red']))
-        self.legend.append(Text(pygame.Vector2(20, 5),
-                                Setting.colors['black'], "Vulnerable Computers"))
+        comp_sign = ['red', 'green', 'purple','blue']
+        legend_sign = ["Vulnerable", "Intruded", 'Exfiltrated', 'Secure']
+        for index in range(len(comp_sign)):
+            self.legend.append(Computer(pygame.Vector2(10,10 + 10*index),
+                                        Setting.colors[comp_sign[index]]))
+            self.legend.append(Text(pygame.Vector2(20, 5 + 10*index),
+                                    Setting.colors['black'], legend_sign[index] +" Computer"))
+
 
     @property
     def lenComputers(self):
