@@ -3,6 +3,7 @@ import time
 import random
 from gameObject import GameObject
 import pygame
+from constants import *
 
 class Computer(GameObject):
     w = 5
@@ -55,7 +56,7 @@ class Text(GameObject):
 
 class System:
 
-    def __init__(self):
+    def __init__(self, context):
         self._m = M
         self._computers = []
         self.legend = []

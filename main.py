@@ -13,6 +13,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    a = System()
-    print(a.getComputers)
-    print(a.states)

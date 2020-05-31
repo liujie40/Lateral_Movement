@@ -1,17 +1,19 @@
 from settings import *
-from network import System,pygame, Text
+from network import System,pygame
+from constants import *
 
 class Game(Setting):
 
-    def __init__(self):
+    def __init__(self, context):
         super().__init__()
+        self.s = System(context)
+        self.scene.append(self.s)
         self.awake()
         self.update()
 
 
     def awake(self):
-        s = System()
-        self.scene.append(s)
+        pass
 
     def timer(self):
         t = pygame.time.get_ticks() // 1800
@@ -38,8 +40,8 @@ class Game(Setting):
             pygame.display.update()
             clock.tick(FPS)
 
-    pygame.quit()
+        pygame.quit()
 
 
 if __name__ == "__main__":
-    Game()
+    Game([])

@@ -1,12 +1,14 @@
 from tkinter import *
 from tkinter import ttk
-from network import System
-from settings import *
+from constants import *
+from simulate import Game
+
+def launchGame(context):
+    Game(context)
 
 class UI:
 
     def __init__(self, master):
-        self.system = System()
 
         self.labels = ["# Computers", "Mean time to intrude",
                        "Fixing_Rate", "Damaging_Rate", "Repairing_Rate"]
@@ -33,6 +35,10 @@ class UI:
 
 
     def simulate(self):
+        import multiprocessing
         print("....simulation is starting....")
-        
-
+        vals = list(map(lambda x:x.get(), self.entries))
+        print(vals)
+        p = multiprocessing.Process(target=launchGame, args=(vals,))
+        p.start()
+        p.join()
