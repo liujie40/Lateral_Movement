@@ -1,4 +1,5 @@
 from settings import *
+from network import System
 
 class Game(Setting):
 
@@ -9,7 +10,8 @@ class Game(Setting):
 
 
     def awake(self):
-        pass
+        s = System()
+        self.scene.append(s)
 
     def update(self):
         run = True
