@@ -30,6 +30,17 @@ class Computer(GameObject):
     def state(self, new_state):
         self._state = new_state
 
+class Text(GameObject):
+    def __init__(self, pos: pygame.Vector2, color, text):
+        super().__init__(pos, color)
+        self.text = text
+
+    def draw(self):
+        vulnerable = self.font.render(self.text,
+                                         False, self.color)
+
+        self.screen.blit(vulnerable, (self.pos.x, self.pos.y))
+
 
 class System:
 
@@ -56,8 +67,11 @@ class System:
         for legend in self.legend:
             legend.update()
 
+
     def createLegend(self):
         self.legend.append(Computer(pygame.Vector2(10,10), Setting.colors['red']))
+        self.legend.append(Text(pygame.Vector2(20, 5),
+                                Setting.colors['black'], "Vulnerable Computers"))
 
     @property
     def lenComputers(self):

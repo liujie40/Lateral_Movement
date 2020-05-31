@@ -17,6 +17,8 @@ class Setting:
 
     def __init__(self):
         pygame.init()
+        pygame.font.init()
+        self.font = pygame.font.SysFont('arial', 12)
 
 
         self.screen = pygame.display.set_mode((self.screen_w, self.screen_h))
