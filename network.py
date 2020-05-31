@@ -1,12 +1,23 @@
 from settings import *
 import time
+from gameObject import GameObject
+import pygame
 
-class Computer:
+class Computer(GameObject):
+    def __init__(self, pos:pygame.Vector2, color):
+        super().__init__(pos, color)
 
-    def __init__(self):
-        # first state of a computer
         self._state = State.VULNERABLE
 
+
+    def draw(self):
+        pygame.draw.rect(self.screen, self.color,(self.pos.x, self.pos.y))
+
+    def control(self):
+        super().control()
+
+    def move(self):
+        super().move()
 
     @property
     def state(self):

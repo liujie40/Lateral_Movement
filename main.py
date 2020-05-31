@@ -1,6 +1,5 @@
 from ui import *
 from network import System
-import os
 
 def main():
     root = Tk()
