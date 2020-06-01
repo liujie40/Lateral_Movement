@@ -10,11 +10,11 @@ class UI:
 
     def __init__(self, master):
 
-        self.labels = ["# Computers", "Mean time to intrude",
-                       "Fixing_Rate", "Damaging_Rate", "Repairing_Rate"]
+        self.labels = ["# Computers", "Mean time to intrude", "Mean time to exfiltrate"
+                       ,"Fixing_Rate", "Damaging_Rate", "Repairing_Rate"]
 
         self.labels = list(map(lambda x:ttk.Label(text=x), self.labels))
-        self.default_values = (M, BETA_I, FIXING_RATE, DAMAGING_RATE, REPAIRING_RATE)
+        self.default_values = (M, BETA_I, EXFILTRATE_RATE,FIXING_RATE, DAMAGING_RATE, REPAIRING_RATE)
 
         self.entries = [ttk.Entry(width=ENTRY_WIDTH_UI) for _ in range(len(self.labels))]
 

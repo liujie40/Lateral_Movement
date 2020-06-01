@@ -6,23 +6,55 @@ import pygame
 from constants import *
 
 class Computer(GameObject):
-    w = 5
-    h = 5
+    w = 10
+    h = 10
 
     def __init__(self, pos:pygame.Vector2, color=None):
-        if not color:
-            if self._state == State.VULNERABLE:
-                self.color = Setting.colors['red']
-            elif self._state == State.INTRUDED:
-                self.color = Setting.colors['green']
-            elif self._state == State.EXFILTRATED:
-                self.color = Setting.colors['purple']
-            elif self._state == State.SECURE:
-                self.color = Setting.colors['blue']
         super().__init__(pos, color)
+        if not color:
+            self.checkState()
+            self._state = State.VULNERABLE
+        else:
+            self._state = None
 
-        self._state = State.VULNERABLE
+        self.exfiltrate_rate = EXFILTRATE_RATE
+        self.damage_rate = DAMAGING_RATE
+        self.ddx = self.dx = 0
 
+
+
+    def checkState(self):
+        if self._state == State.VULNERABLE:
+            self.color = Setting.colors['red']
+        elif self._state == State.INTRUDED:
+            self.color = Setting.colors['green']
+            self.exfiltrate()
+        elif self._state == State.EXFILTRATED:
+            self.color = Setting.colors['purple']
+            self.damage()
+        elif self._state == State.DAMAGED:
+            self.color = Setting.colors['black']
+            self.exfiltrate()
+        elif self._state == State.SECURE:
+            self.color = Setting.colors['blue']
+
+    def exfiltrate(self):
+        if self.dx < LAMBDA_J(self.exfiltrate_rate)*2:
+            pygame.draw.rect(self.screen, Setting.colors['purple'],
+                             (self.pos.x, self.pos.y-10, self.dx, 5))
+            self.dx += self.exfiltrate_rate//2
+        else:
+            self._state = State.EXFILTRATED
+            self.dx = 0
+
+    def damage(self):
+        if self.ddx < self.damage_rate*10:
+            pygame.draw.rect(self.screen, Setting.colors['black'],
+                             (self.pos.x, self.pos.y-10, self.ddx, 5))
+            self.ddx += self.damage_rate//2
+        else:
+            self._state = State.DAMAGED
+            self.ddx = 0
 
 
     def draw(self):
@@ -30,7 +62,7 @@ class Computer(GameObject):
                          (self.pos.x, self.pos.y, Computer.w, Computer.h))
 
     def control(self):
-        super().control()
+        self.checkState()
 
     def move(self):
         super().move()
@@ -59,7 +91,7 @@ class System:
     def __init__(self, context):
         self._m = int(context[0])
         self.intrude_rate = int(context[1])
-        self.comprise_rate = int(context[2])
+        self.intrude_index = 0
 
 
         self._computers = []
@@ -70,12 +102,26 @@ class System:
             v.y = random.randint(Computer.h*10, Setting.screen_h)
             self._computers.append(Computer(v, Setting.colors['red']))
 
-        self.states = list(map(lambda x:x.state, self._computers))
+            self._computers[_].exfiltrate_rate = int(context[2])
+            self._computers[_].damage_rate = int(context[4])
+
+        self.states = list(map(lambda x:x.state, self.getComputers))
 
         self.createLegend()
 
     def getClock(self):
         return pygame.time.get_ticks()
+
+    def stateChange(self):
+        clock = self.getClock()//CLOCK_TICK
+        # self.intrude_index = random.randint(0, self.lenComputers-1)
+        # change computer to intruded
+        if self.intrude_index < len(self.getComputers) and \
+            clock != 0 and clock%self.intrude_rate == 0 and \
+                (self.getComputers[self.intrude_index].state != State.EXFILTRATED
+                or self.getComputers[self.intrude_index].state != State.SECURE):
+            self.getComputers[self.intrude_index].state = State.INTRUDED
+            self.intrude_index += 1
 
     def update(self):
         for computer in self._computers:
@@ -83,15 +129,11 @@ class System:
         for legend in self.legend:
             legend.update()
 
-
-    def stateChange(self):
-        """
-        """
-
+        self.stateChange()
 
     def createLegend(self):
-        comp_sign = ['red', 'green', 'purple','blue']
-        legend_sign = ["Vulnerable", "Intruded", 'Exfiltrated', 'Secure']
+        comp_sign = ['red', 'green', 'purple','blue', 'black']
+        legend_sign = ["Vulnerable", "Intruded", 'Exfiltrated', 'Secure', 'Damaged']
         for index in range(len(comp_sign)):
             self.legend.append(Computer(pygame.Vector2(10,10 + 10*index),
                                         Setting.colors[comp_sign[index]]))

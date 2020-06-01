@@ -39,6 +39,7 @@ class Game(Setting):
             # update the display
             pygame.display.update()
             clock.tick(FPS)
+            pygame.time.delay(TIME_DELAY)
 
         pygame.quit()
 

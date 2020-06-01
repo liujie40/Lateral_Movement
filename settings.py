@@ -35,5 +35,6 @@ class State(Enum):
     INTRUDED = 1
     EXFILTRATED = 2
     SECURE = 3
+    DAMAGED = 4
 
 
