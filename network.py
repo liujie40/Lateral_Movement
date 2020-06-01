@@ -57,7 +57,11 @@ class Text(GameObject):
 class System:
 
     def __init__(self, context):
-        self._m = M
+        self._m = int(context[0])
+        self.intrude_rate = int(context[1])
+        self.comprise_rate = int(context[2])
+
+
         self._computers = []
         self.legend = []
         for _ in range(self.lenComputers):
@@ -71,7 +75,7 @@ class System:
         self.createLegend()
 
     def getClock(self):
-        return time.clock()
+        return pygame.time.get_ticks()
 
     def update(self):
         for computer in self._computers:
@@ -79,6 +83,10 @@ class System:
         for legend in self.legend:
             legend.update()
 
+
+    def stateChange(self):
+        """
+        """
 
 
     def createLegend(self):

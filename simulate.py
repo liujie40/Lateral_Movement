@@ -16,7 +16,7 @@ class Game(Setting):
         pass
 
     def timer(self):
-        t = pygame.time.get_ticks() // 1800
+        t = self.s.getClock() // CLOCK_TICK
         text = self.font2.render(str(t)+ " Day", False, Setting.colors['blue'])
         self.screen.blit(text, (10, Setting.screen_h-30))
 
