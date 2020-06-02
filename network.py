@@ -24,6 +24,8 @@ class Computer(GameObject):
         self.clock = 0
         self.i_computers = 0
 
+        self.dx = 0
+
 
 
     def checkState(self):
@@ -93,6 +95,13 @@ class System:
         self.secure = []
         self.damaged = []
 
+        self.log = []
+        self.d_log = []
+        self.e_log = []
+        self.s_log = []
+        self.i_log = []
+        self.v_log = []
+
         self.legend = []
         for _ in range(self.lenComputers):
             v = pygame.Vector2()
@@ -106,15 +115,33 @@ class System:
         self.createLegend()
 
     def __del__(self):
-        print(".....Bye......")
+        plt.title(f"Intrude_Rate: {self.intrude_rate} "
+                  f"Fixing_Rate: {self.secure_rate} "
+                  f"Damage_Rate: {self.damage_rate} "
+                  f"Repair_Rate: {self.repair_rate}")
+        plt.xlabel("Time")
+        plt.ylabel("State of computers")
+        plt.plot(self.log, self.s_log, label="Secured")
+        plt.plot(self.log, self.i_log, label="Intruded")
+        plt.plot(self.log, self.d_log, label="Damaged")
+        plt.plot(self.log, self.e_log, label="Exfiltrated")
+        plt.plot(self.log, self.v_log, label='Vulnerable')
+        plt.legend()
+        plt.show()
 
     def getClock(self):
         return pygame.time.get_ticks()
 
     def stateChange(self):
         clock = self.getClock()//CLOCK_TICK
-        # self.intrude_index = random.randint(0, self.lenComputers-1)
-        # change computer to intruded
+
+        self.log.append(clock)
+        self.d_log.append(len(self.damaged))
+        self.e_log.append(len(self.exfiltrate))
+        self.i_log.append(len(self.intruded))
+        self.s_log.append(len(self.secure))
+        self.v_log.append(len(self.getComputers))
+
         rand_state = random.randint(0, 2)
         state = [self.getComputers, self.intruded, self.exfiltrate]
 
@@ -138,11 +165,12 @@ class System:
 
         if len(self.exfiltrate) > 0 and \
             clock%self.damage_rate == 0:
+            print(self.exfiltrate)
             self.exfiltrate[0].state = State.DAMAGED
             self.damaged.append(self.exfiltrate.pop(0))
 
         if len(self.damaged) > 0 and \
-            clock%self.damage_rate == 0:
+            clock%self.repair_rate == 0:
             self.damaged[0].state = State.EXFILTRATED
             self.exfiltrate.append(self.damaged.pop(0))
 
