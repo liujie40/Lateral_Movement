@@ -1,8 +1,9 @@
 from enum import Enum
 import pygame
 from pygame.locals import *
+from abc import ABC
 
-class Setting:
+class Setting(ABC):
 
     colors = {
         "white":(0xff,0xff,0xff),
