@@ -2,6 +2,11 @@ from ui import *
 from network import System
 
 def main():
+    """
+    () -> None
+    run Ui
+    :return None
+    """
     root = Tk()
     # give a title
     root.title("Lateral Movement Attacks")

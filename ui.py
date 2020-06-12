@@ -7,9 +7,14 @@ def launchGame(context):
     Game(context)
 
 class UI:
-
+    """
+    get the settings value
+    and start the simulation
+    """
     def __init__(self, master):
-
+        """
+        :param master: root master
+        """
         self.labels = ["# Computers", "Mean time to intrude", "Mean time to exfiltrate"
                        ,"Fixing_Rate", "Damaging_Rate", "Repairing_Rate"]
 
@@ -24,7 +29,11 @@ class UI:
         self.setLayout()
 
     def setLayout(self):
-
+        """
+        create the layout
+        labels with corresponding entries
+        :return: None
+        """
         for index, label in enumerate(self.labels):
             label.grid(row=index)
             self.entries[index].insert(END, str(self.default_values[index]))
@@ -35,6 +44,10 @@ class UI:
 
 
     def simulate(self):
+        """
+        Start the simulation
+        :return: None
+        """
         import multiprocessing
         print("....simulation is starting....")
         vals = list(map(lambda x:x.get(), self.entries))

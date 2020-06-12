@@ -1,6 +1,9 @@
 from settings import Setting,pygame
 
 class GameObject(Setting):
+    """
+    blueprint for every in world object
+    """
     def __init__(self, pos:pygame.Vector2, color):
         super().__init__()
         self.pos = pos

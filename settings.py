@@ -4,7 +4,9 @@ from pygame.locals import *
 from abc import ABC
 
 class Setting(ABC):
-
+    """
+    Main Setting of the sim
+    """
     colors = {
         "white":(0xff,0xff,0xff),
         "black":(0,0,0),
@@ -19,6 +21,9 @@ class Setting(ABC):
     screen_h = 600
 
     def __init__(self):
+        """
+        (Setting) -> None
+        """
         pygame.init()
         pygame.font.init()
         self.font = pygame.font.SysFont('arial', 12)

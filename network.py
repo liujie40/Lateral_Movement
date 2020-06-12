@@ -9,11 +9,23 @@ from threading import Thread
 import matplotlib.pyplot as plt
 
 class Computer(GameObject):
+    """
+    Computer class to preview the simulation
+    Computer is a rectangular object
+    w: width of the computer
+    h: height of the computer
+    """
     w = 10
     h = 10
 
     def __init__(self, pos:pygame.Vector2, color=None):
+        """
+        (Computer, pygame.Vector2, (int, int, int))
+        :param pos: position of the gameObject
+        :param color: color of the computer, depends on the state
+        """
         super().__init__(pos, color)
+        # determine whether computer is static
         if not color:
             self._state = State.VULNERABLE
             self.checkState()
@@ -29,6 +41,17 @@ class Computer(GameObject):
 
 
     def checkState(self):
+        """
+        (Computer) -> None
+        set the color of the computer
+        depending its state
+        VULNERABLE: red
+        INTRUDED: green
+        EXFILTRATED:pink
+        DAMAGED:black
+        SECURE:blue
+        :return: None
+        """
         if self._state == State.VULNERABLE:
             self.color = Setting.colors['red']
         elif self._state == State.INTRUDED:
@@ -43,6 +66,12 @@ class Computer(GameObject):
 
 
     def exfiltrate(self):
+        """
+        (Computer) -> None
+        checks if computer becomes exfiltrated
+        once triggered it will try to load files
+        :return:None
+        """
         if self.dx < MU_J(self.i_computers)*2:
             pygame.draw.rect(self.screen, Setting.colors['purple'],
                              (self.pos.x, self.pos.y-10, self.dx, 5))
@@ -51,14 +80,20 @@ class Computer(GameObject):
             self.color = Setting.colors['purple']
 
     def draw(self):
+        """
+        draw rectangle represented as computer
+        :return:
+        """
         pygame.draw.rect(self.screen, self.color,
                          (self.pos.x, self.pos.y, Computer.w, Computer.h))
 
     def control(self):
+        """
+        controls the state
+        :return:
+        """
         self.checkState()
 
-    def move(self):
-        super().move()
 
     @property
     def state(self):
@@ -68,11 +103,23 @@ class Computer(GameObject):
         self._state = new_state
 
 class Text(GameObject):
+    """
+    Create a text and add it to the scene
+    """
     def __init__(self, pos: pygame.Vector2, color, text):
+        """
+        :param pos: position in the world
+        :param color: color of the text
+        :param text: the actual name of the text
+        """
         super().__init__(pos, color)
         self.text = text
 
     def draw(self):
+        """
+        show the text
+        :return: None
+        """
         vulnerable = self.font.render(self.text,
                                          False, self.color)
 
@@ -80,8 +127,20 @@ class Text(GameObject):
 
 
 class System:
+    """
+    Manages every thing in the world
+    """
 
     def __init__(self, context):
+        """
+        :param context:{
+            number of computers,
+            intrude_rate,
+            secure_rate,
+            damage_rate,
+            repair_rate
+        } all in days
+        """
         self._m = int(context[0])
         self.intrude_rate = int(context[1])
         self.secure_rate = int(context[3])
@@ -102,6 +161,7 @@ class System:
         self.i_log = []
         self.v_log = []
 
+        # create a legend at top left corner
         self.legend = []
         for _ in range(self.lenComputers):
             v = pygame.Vector2()
@@ -115,6 +175,10 @@ class System:
         self.createLegend()
 
     def __del__(self):
+        """
+        create a graph of the simulation once
+        sim is destroyed
+        """
         plt.title(f"Intrude_Rate: {self.intrude_rate} "
                   f"Fixing_Rate: {self.secure_rate} "
                   f"Damage_Rate: {self.damage_rate} "
@@ -130,9 +194,15 @@ class System:
         plt.show()
 
     def getClock(self):
+        """
+        time counting
+        """
         return pygame.time.get_ticks()
 
     def stateChange(self):
+        """
+        change the state of the computer
+        """
         clock = self.getClock()//CLOCK_TICK
 
         self.log.append(clock)
